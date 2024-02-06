@@ -163,6 +163,166 @@ Exemplo:
 def multiplica(x: int, y: float = 0) -> float:
 		return x * y
 
+Em alguns casos é preciso que determinar um valor a uma variável de forma explícita para que os se o valor não receber um valor consigamos por 1 condicional para isso continuar funcionando.
+
+```python
+def soma(x: int, y: float | None = None) -> float:
+
+	# Verficiando se o time de y é float se for float retorna x + y
+    if isinstance(y, float | int):  
+        return x + y
+
+	# Se não for float retorna apenas o valor de x
+    return x + x
+
+  
+  
+# O valor 1 é usado no exemplo para variável x e se passarmos um valor para y ou não ele será executado da mesma forma.
+print(soma(1))
+```
+
+## Callable
+
+As funções e classes são callables ou seja são "Chamadas" usando o parênteses para serem executadas, podemos observar no exemplo acima a função soma(), onde a mesma recebe uma variável.
+
+Existe um método em Python da biblioteca collections.abc chamado Callable
+
+```python
+
+from collections.abc import Callable
+
+  
+
+SomaInteiros = Callable[[int, int], int]
+
+  
+
+"""Função que recebe outra função(func) como parâmetro do tipo (int e int)
+
+através do Callable, retornando a função com os outros 2 parâmetros a e b"""
+
+def executa(func: SomaInteiros, a: int, b: int) -> int:
+
+    return func(a,b)
+
+  
+
+""" Função que será chamada na função executa() - Os tipos das variáveis são inteiros,
+
+se fosse de outro tipo veriamos uma reclamação de tipagem"""
+
+def soma(a: int, b: int) -> int:
+
+    return a + b
+
+  
+  
+
+def soma2(a: str, b: float) -> str:
+
+    return a + b
+
+  
+
+"""
+
+A função será executada da mesma forma porém, se for usado o mypy veremos
+
+um erro com relação a Type annotations"""
+
+print(executa(soma2, 1, 5))
+
+
+error: Unsupported operand types for + ("str" and "float")  [operator]
+error: Argument 1 to "executa" has incompatible type "Callable[[str, float], str]"; expected "Callable[[int, int], int]"  [arg-type]
+Found 2 errors in 1 file (checked 1 source file)
+
+```
+
+O erro acima ocorre por que a função func que é um parâmetro da função executa recebe o Callable como Tipagem, que no caso seriam dois parametros inteiros que retorna um inteiro.
+
+```python
+
+Callable[[int,int], int]  ==> Esta chamada funciona como a tipagem abaixo.
+Callable(a: int, b: int) -> int
+
+```
+
+## TypeVar
+
+
+O TypeVar funciona como uma tipagem dinâmica, ou seja, necessariamente quando precisamos usar um tipo que ainda não sabemos qual será, usamos esse método.
+
+```python
+from typing import TypeVar
+
+  
+  
+
+# O parâmetro que for usado como variável tbm deve ser usado no TypeVar (T)
+
+T = TypeVar('T')  
+# C = TypeVar('C') -- alterando no resto do escopo [C] --> C
+  
+  
+# Tudo que está dentro da list[T] deve ser do mesmo tipo
+def get_item(list: list[T], index: int) -> T:
+
+    return list[index]
+
+  
+  
+
+list_int = get_item([1, 2, 3], 1)
+
+list_str = get_item(['a', 'b', 'c'], 1)
+
+
+```
+## Classes (Types)
+
+As classes assim como todos os outros tipos acima pode ser usada como tipagem porém de uma forma diferente, se elas forem usadas como tipo tudo que está dentro dela pode ser usado para ser chamado.
+
+Exemplo:
+
+```python
+class Pessoa:
+
+	def __init__(self, nome: str, idade: int)-> None:
+		self.nome = nome
+		self.idade = idade
+
+	@property
+	def cliente(self):
+		return f"Cliente {self.nome} Tem {self.idade} anos"
+
+
+def info_cliente(client: Pessoa)->str:
+	return f'O Nome do cliente é {client.nome}'
+
+```
+Se modificado não conseguimos mais chamar os atributos da classe
+
+```python
+class Pessoa:
+
+	def __init__(self, nome: str, idade: int)-> None:
+		self.nome = nome
+		self.idade = idade
+
+	@property
+	def cliente(self):
+		return f"Cliente {self.nome} Tem {self.idade} anos"
+
+
+def info_cliente(client)->str:
+	return client  # Não conseguimos mais usar nada da classe Pessoa
+```
+
+Ou seja se usar qualquer classe como tipagem podemos chamar os atributos e tudo que estiver dentro dela.
+
+### Referência do conteúdo: Luiz Otávio
+
 multiplica(1)
 
 # Resultado ==> 0
