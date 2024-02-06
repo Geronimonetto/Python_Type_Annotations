@@ -163,8 +163,12 @@ Exemplo:
 def multiplica(x: int, y: float = 0) -> float:
 		return x * y
 
-Em alguns casos é preciso que determinar um valor a uma variável de forma explícita para que os se o valor não receber um valor consigamos por 1 condicional para isso continuar funcionando.
+multiplica(1)
 
+# Resultado ==> 0
+```
+
+Em alguns casos é preciso determinar um valor a uma variável de forma explícita para que os se o valor não receber um valor consigamos por 1 condicional para isso continuar funcionando.
 ```python
 def soma(x: int, y: float | None = None) -> float:
 
@@ -323,7 +327,4 @@ Ou seja se usar qualquer classe como tipagem podemos chamar os atributos e tudo 
 
 ### Referência do conteúdo: Luiz Otávio
 
-multiplica(1)
 
-# Resultado ==> 0
-```
